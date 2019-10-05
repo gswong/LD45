@@ -87,6 +87,10 @@ public class PlayerController : MonoBehaviour {
         if (isCatching && collision.gameObject.CompareTag("EnemyProjectile")) {
             caughtProjectile = true;
             Destroy(collision.gameObject);
+            // Reset player state if caught projectile
+            isCatching = false;
+            transform.localScale = scale;
+            canCatchTime = 0;
         }
         // TODO if not isCatching and ran into enemy projectile
         if (!isCatching && collision.gameObject.CompareTag("EnemyProjectile")) {
