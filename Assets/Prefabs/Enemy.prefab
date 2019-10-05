@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4690040674890418}
   - component: {fileID: 212721198740729732}
   - component: {fileID: 50529694407513574}
+  - component: {fileID: -7901017923076133105}
+  - component: {fileID: 8904925979437602000}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Player
@@ -102,3 +104,30 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-7901017923076133105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755364460818522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674c21ee8f129174f8602a300e6172c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletCount: 10
+  startAngle: 0
+  endAngle: 360
+--- !u!114 &8904925979437602000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755364460818522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9dd197fdfd30744d8ca6a3471f36555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
