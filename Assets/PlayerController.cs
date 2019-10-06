@@ -9,17 +9,33 @@ public class PlayerController : MonoBehaviour {
     //
     public float MaxSpeed = 7;
 
+    public float Lives = 3;
+
     //
     // Internally computed speed
     //
     private float speed;
 
-    private bool isCatching;
-    private float canCatchTime;
+    private float catchLockTime;
     private Vector3 scale;
-    private bool caughtProjectile;
+
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
+    private bool isCatching;
+    private bool caughtProjectile;
+    private bool isHurt;
+    private float hurtInvincibleTime;
+
+    public enum PlayerState {
+        CatchReadyNoProjectile,
+        CatchingNoProjectile,
+        CatchLockedNoProjectile,
+        CatchReadyCaughtProjectile,
+        HurtInvincible,
+        NoLivesRemaining
+    }
+
+    public PlayerState ps;
 
     // Use this for initialization
     void Start () {
@@ -27,9 +43,10 @@ public class PlayerController : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
         sprite.color = Color.white;
         speed = MaxSpeed;
-        isCatching = false;
-        canCatchTime = 0;
+        catchLockTime = 0;
+        hurtInvincibleTime = 0;
         scale = transform.localScale;
+        ps = PlayerState.CatchReadyNoProjectile;
     }
 
     // Update is called once per frame
@@ -41,61 +58,110 @@ public class PlayerController : MonoBehaviour {
         float yAxis = Input.GetAxis("Vertical");
         Vector3 tempVect = new Vector3(xAxis, yAxis, 0);
         tempVect = tempVect.normalized * speed * Time.deltaTime;
-        rb.MovePosition(rb.transform.position + tempVect);
-
-        //
-        // Visual
-        //
-        if (caughtProjectile) {
-            sprite.color = Color.cyan;
-        }
-        else {
-            sprite.color = Color.white;
+        if (ps != PlayerState.HurtInvincible && ps != PlayerState.NoLivesRemaining) {
+            rb.MovePosition(rb.transform.position + tempVect);
         }
 
         //
         // Spacebar actions
         //
-        if (Input.GetKeyDown("space")) {
-            //
-            // Throw projectile
-            //
-            if (caughtProjectile) {
-                // TODO shoot projectile outwards with projectile spawner
-                caughtProjectile = false;
-            }
-
-            //
-            // Catch projectile
-            //
-            if (Time.time > canCatchTime) {                
-                isCatching = true;
-                Vector3 scaleVect = new Vector3(0.1f, 0.1f, 0);
-                transform.localScale += scaleVect;
-                // Set lockout timer to prevent spamming
-                canCatchTime = Time.time + 0.5f;
+        if (Input.GetKeyDown("space") && Time.time > catchLockTime && Time.time > hurtInvincibleTime) {
+            switch (ps) {
+                case PlayerState.CatchReadyNoProjectile:
+                    ps = PlayerState.CatchingNoProjectile;
+                    catchLockTime = Time.time + 0.5f;
+                    break;
+                case PlayerState.CatchReadyCaughtProjectile:
+                    // TODO emit player projectile
+                    ps = PlayerState.CatchingNoProjectile;
+                    catchLockTime = Time.time + 0.5f;
+                    break;
+                default:
+                    break;
             }
         }
-        if (Time.time > canCatchTime) {
+        if (Time.time > catchLockTime) {
             // No input and time expired
-            isCatching = false;
-            transform.localScale = scale;
+            ps = PlayerState.CatchReadyNoProjectile;
+        }
+
+        if (Time.time > hurtInvincibleTime) {
+            ps = PlayerState.CatchReadyNoProjectile;
+        }
+
+        //
+        // Visual
+        //
+        switch (ps) {
+            case PlayerState.CatchReadyCaughtProjectile:
+                sprite.color = Color.cyan;
+                break;
+            case PlayerState.CatchingNoProjectile:
+                sprite.color = Color.white;
+                Vector3 scaleVect = new Vector3(0.1f, 0.1f, 0);
+                transform.localScale = scale + scaleVect;
+                break;
+            case PlayerState.HurtInvincible:
+                sprite.color = Color.white;
+                Color tempColor = sprite.color;
+                tempColor.a = 0.5f;
+                sprite.color = tempColor;
+                break;
+            default:
+                transform.localScale = scale;
+                sprite.color = Color.white;
+                break;
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if (isCatching && collision.gameObject.CompareTag("EnemyProjectile")) {
-            caughtProjectile = true;
-            Destroy(collision.gameObject);
-            // Reset player state if caught projectile
-            isCatching = false;
-            transform.localScale = scale;
-            canCatchTime = 0;
+        switch (ps) {
+            case PlayerState.CatchReadyNoProjectile:
+            case PlayerState.CatchLockedNoProjectile:
+                if (collision.gameObject.CompareTag("EnemyProjectile")) {
+                    ps = PlayerState.HurtInvincible;
+                    Destroy(collision.gameObject);
+                    hurtInvincibleTime = Time.time + 1;
+                    if (Lives >= 0) {
+                        Lives--;
+                    }
+                }
+                if (collision.gameObject.CompareTag("Enemy")) {
+                    ps = PlayerState.HurtInvincible;
+                    hurtInvincibleTime = Time.time + 1;
+                    if (Lives >= 0) {
+                        Lives--;
+                    }
+                    Vector3 direction = collision.transform.position - transform.position;
+                    direction = -direction.normalized;
+                    rb.AddForce(direction * MaxSpeed);
+                }
+                break;
+            case PlayerState.CatchingNoProjectile:
+                if (collision.gameObject.CompareTag("EnemyProjectile")) {
+                    ps = PlayerState.CatchReadyCaughtProjectile;
+                    Destroy(collision.gameObject);
+                    catchLockTime = 0;
+                }
+                break;
+            case PlayerState.CatchReadyCaughtProjectile:
+                if (collision.gameObject.CompareTag("EnemyProjectile")) {
+                    ps = PlayerState.CatchReadyCaughtProjectile;
+                }
+                if (collision.gameObject.CompareTag("Enemy")) {
+                    ps = PlayerState.CatchReadyNoProjectile;
+                    // TODO damage the enemy
+                }
+                break;
+            case PlayerState.HurtInvincible:
+                break;
+            default:
+                break;
         }
-        // TODO if not isCatching and ran into enemy projectile
-        if (!isCatching && collision.gameObject.CompareTag("EnemyProjectile")) {
-            Destroy(collision.gameObject);
+
+        if (Lives <= 0) {
+            // TODO Game Over
+            ps = PlayerState.NoLivesRemaining;
         }
-        // TODO 
     }
 }
