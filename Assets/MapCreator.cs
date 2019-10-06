@@ -101,9 +101,10 @@ public class MapCreator : MonoBehaviour
     private void spawnEnemies(bool[,] world, int count) {
         int enemyCount = 0;
         while (enemyCount < count) {
-            int x = Random.Range(0, width - 1);
-            int y = Random.Range(0, height - 1);
-            if (!world[x, y]) {
+            int x = Random.Range(1, width - 2);
+            int y = Random.Range(1, height - 2);
+            bool safeZone =  !(world[x-1, y-1] || world[x-1, y] || world[x-1, y+1] || world[x, y-1] || world[x, y] || world[x, y+1] || world[x+1, y-1] || world[x+1, y] || world[x, y+1]);
+            if (safeZone) {
                 GameObject projectile = Instantiate(Enemy, new Vector3(x * .6f, y * .6f, 0), Quaternion.identity) as GameObject;
                 enemyCount++;
             }
@@ -111,9 +112,10 @@ public class MapCreator : MonoBehaviour
     }
 
     private void spawnPlayer(bool[,] world) {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (!world[x, y]) {
+        for (int x = 1; x < width - 1; x++) {
+            for (int y = 1; y < height - 1; y++) {
+                bool safeZone =  !(world[x-1, y-1] || world[x-1, y] || world[x-1, y+1] || world[x, y-1] || world[x, y] || world[x, y+1] || world[x+1, y-1] || world[x+1, y] || world[x, y+1]);
+                if (safeZone) {
                     GameObject projectile = Instantiate(PlayerObject, new Vector3(x*.6f, y*.6f, 0), Quaternion.identity) as GameObject;
                     GameObject camera = Instantiate(Camera, new Vector3(x * .6f, y * .6f, -10), Quaternion.identity) as GameObject;
                     return;
