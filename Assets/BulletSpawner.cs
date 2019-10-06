@@ -31,9 +31,13 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField]
     private float bulletLineSpread = 90f;
 
-    [Tooltip("Fire spawn rate per second")]
+    [Tooltip("Bullet speed")]
     [SerializeField]
-    private float bulletFireRatePerSecond = 4;
+    private float bulletSpeed = 1;
+
+    [Tooltip("Bullet spawn rate per second")]
+    [SerializeField]
+    private float bulletSpawnRatePerSecond = 1;
 
     [Tooltip("Fire spawn rotation rate in degrees per second")]
     [SerializeField]
@@ -44,7 +48,7 @@ public class BulletSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("Fire", 0f, (1 / bulletFireRatePerSecond));
+        InvokeRepeating("Fire", 0f, (1 / bulletSpawnRatePerSecond));
     }
 
     // Update is called once per frame
@@ -67,7 +71,7 @@ public class BulletSpawner : MonoBehaviour
                 float bulletDirectionY = transform.position.y + Mathf.Cos((currentAngle * Mathf.PI) / 180f);
 
                 Vector3 bulletMoveVector = new Vector3(bulletDirectionX, bulletDirectionY, 0f);
-                Vector2 bulletDirection = (bulletMoveVector - transform.position).normalized;
+                Vector2 bulletDirection = (bulletMoveVector - transform.position).normalized * bulletSpeed;
 
                 GameObject bullet = GetBullet();
                 bullet.transform.position = transform.position;
