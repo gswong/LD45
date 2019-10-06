@@ -18,13 +18,17 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!GetComponent<Renderer>().isVisible)
+        {
+            gameObject.SetActive(false);
+        }
+
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
     }
 
     private void OnEnable()
     {
         CancelInvoke();
-        Invoke("DestroyInvisible", 1f);
         Invoke("Destroy", lifeDuration);
     }
 
@@ -46,14 +50,6 @@ public class Bullet : MonoBehaviour
     public void SetLifeDuration(float duration)
     {
         lifeDuration = duration;
-    }
-
-    private void DestroyInvisible()
-    {
-        if(!GetComponent<Renderer>().isVisible)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     private void Destroy()

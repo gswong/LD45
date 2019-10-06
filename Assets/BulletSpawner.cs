@@ -66,13 +66,16 @@ public class BulletSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bulletSpawnDeltaTime += Time.deltaTime;
-        currentRotation = (currentRotation + (bulletRotationRate * Time.deltaTime)) % 360;
-
-        if (bulletSpawnDeltaTime > bulletSpawnDeltaThreshold)
+        if (GetComponent<Renderer>().isVisible)
         {
-            bulletSpawnDeltaTime = 0;
-            Fire();
+            bulletSpawnDeltaTime += Time.deltaTime;
+            currentRotation = (currentRotation + (bulletRotationRate * Time.deltaTime)) % 360;
+
+            if (bulletSpawnDeltaTime > bulletSpawnDeltaThreshold)
+            {
+                bulletSpawnDeltaTime = 0;
+                Fire();
+            }
         }
     }
 
