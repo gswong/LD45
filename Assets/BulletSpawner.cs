@@ -43,25 +43,42 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField]
     private float bulletRotationRate = 90;
 
+    [SerializeField]
+    private bool bulletRotationInverted = false;
+
     private List<GameObject> bullets = new List<GameObject>();
+
+    private float bulletSpawnDeltaThreshold = 0f;
+
+    private float currentRotation = 0f;
+
+    float bulletSpawnDeltaTime = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("Fire", 0f, (1 / bulletSpawnRatePerSecond));
+        currentRotation = initialRotation;
+        bulletSpawnDeltaThreshold = (1 / bulletSpawnRatePerSecond);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(Vector3.forward, bulletRotationRate * Time.deltaTime);
+        bulletSpawnDeltaTime += Time.deltaTime;
+        currentRotation = (currentRotation + (bulletRotationRate * Time.deltaTime)) % 360;
+
+        if (bulletSpawnDeltaTime > bulletSpawnDeltaThreshold)
+        {
+            bulletSpawnDeltaTime = 0;
+            Fire();
+        }
     }
 
     private void Fire()
     {
-        float currentBulletSetSpread = initialRotation;
+        float currentBulletSetSpread = bulletRotationInverted ? 360 - currentRotation : currentRotation;
 
-        for(int bulletSet = 0; bulletSet < bulletSetAmount; bulletSet++)
+        for (int bulletSet = 0; bulletSet < bulletSetAmount; bulletSet++)
         {
             float currentAngle = currentBulletSetSpread;
 
@@ -76,8 +93,8 @@ public class BulletSpawner : MonoBehaviour
                 GameObject bullet = GetBullet();
                 bullet.transform.position = transform.position;
                 bullet.transform.rotation = transform.rotation;
-                bullet.GetComponent<Bullet>().SetMoveDirection(bulletDirection);
                 bullet.SetActive(true);
+                bullet.GetComponent<Bullet>().SetMoveDirection(bulletDirection);
 
                 currentAngle = (currentAngle + bulletLineSpread) % 360;
             }
