@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour {
     // Externally control the speed
     //
     public float MaxSpeed = 7;
-
+    public float KnockBack = 50;
     public float Lives = 3;
-
+    public GameObject PlayerProjectile;
     //
     // Internally computed speed
     //
@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
     private bool caughtProjectile;
     private bool isHurt;
     private float hurtInvincibleTime;
+    private Vector3 aimProjectile;
 
     public enum PlayerState {
         CatchReadyNoProjectile,
@@ -47,6 +48,8 @@ public class PlayerController : MonoBehaviour {
         hurtInvincibleTime = 0;
         scale = transform.localScale;
         ps = PlayerState.CatchReadyNoProjectile;
+        aimProjectile = new Vector3(1, 0, 0);
+        aimProjectile = aimProjectile.normalized;
     }
 
     // Update is called once per frame
@@ -58,6 +61,9 @@ public class PlayerController : MonoBehaviour {
         float yAxis = Input.GetAxis("Vertical");
         Vector3 tempVect = new Vector3(xAxis, yAxis, 0);
         tempVect = tempVect.normalized * speed * Time.deltaTime;
+        if (xAxis != 0 || yAxis != 0) {
+            aimProjectile = tempVect.normalized;
+        }
         if (ps != PlayerState.HurtInvincible && ps != PlayerState.NoLivesRemaining) {
             rb.MovePosition(rb.transform.position + tempVect);
         }
@@ -72,8 +78,11 @@ public class PlayerController : MonoBehaviour {
                     catchLockTime = Time.time + 0.5f;
                     break;
                 case PlayerState.CatchReadyCaughtProjectile:
-                    // TODO emit player projectile
                     ps = PlayerState.CatchingNoProjectile;
+                    GameObject projectile = Instantiate(PlayerProjectile, transform.position, Quaternion.identity) as GameObject;
+                    Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+                    Rigidbody2D prb = projectile.GetComponent<Rigidbody2D>();
+                    prb.AddForce(aimProjectile * 2 * KnockBack);
                     catchLockTime = Time.time + 0.5f;
                     break;
                 default:
@@ -142,6 +151,9 @@ public class PlayerController : MonoBehaviour {
                     if (Lives >= 0) {
                         Lives--;
                     }
+                    Vector3 direction = collision.gameObject.transform.position - transform.position;
+                    direction = -direction.normalized;
+                    rb.AddForce(direction * KnockBack);
                 }
                 if (collision.gameObject.CompareTag("Enemy")) {
                     ps = PlayerState.HurtInvincible;
@@ -149,9 +161,9 @@ public class PlayerController : MonoBehaviour {
                     if (Lives >= 0) {
                         Lives--;
                     }
-                    Vector3 direction = collision.transform.position - transform.position;
+                    Vector3 direction = collision.gameObject.transform.position - transform.position;
                     direction = -direction.normalized;
-                    rb.AddForce(direction * MaxSpeed);
+                    rb.AddForce(direction * KnockBack);
                 }
                 break;
             case PlayerState.CatchingNoProjectile:
