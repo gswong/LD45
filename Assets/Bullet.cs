@@ -17,6 +17,11 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+
+        if(!GetComponent<Renderer>().isVisible)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnEnable()
