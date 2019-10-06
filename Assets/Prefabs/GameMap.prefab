@@ -175,7 +175,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1615450431
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 100
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -214,8 +214,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Tile: {fileID: 11400000, guid: fb9ac5358a2d938448a068faeaac1ae8, type: 2}
-  width: 100
-  height: 100
+  width: 30
+  height: 30
   deathLimit: 3
   birthLimit: 4
   numberOfSteps: 6

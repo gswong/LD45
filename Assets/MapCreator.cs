@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 public class MapCreator : MonoBehaviour
 {
     public Tile Tile;
-    public int width = 100;
-    public int height = 100;
+    public int width = 50;
+    public int height = 50;
     public int deathLimit = 3;
     public int birthLimit = 4;
     public int numberOfSteps = 6;
