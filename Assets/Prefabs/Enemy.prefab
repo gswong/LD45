@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 90691d18e9f32784190c6372d3deebe2, type: 3}
-  m_Color: {r: 0.8207547, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.5188679, g: 0.23985405, b: 0.30005828, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -153,5 +153,6 @@ MonoBehaviour:
   bulletSetSpread: 0
   bulletLineAmount: 4
   bulletLineSpread: 90
-  bulletFireRatePerSecond: 4
+  bulletSpeed: 1
+  bulletSpawnRatePerSecond: 1
   bulletRotationRate: 90

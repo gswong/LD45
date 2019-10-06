@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     private bool isHurt;
     private float hurtInvincibleTime;
     private Vector3 aimProjectile;
+    private Color originalColor;
 
     public enum PlayerState {
         CatchReadyNoProjectile,
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour {
     void Start () {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
-        sprite.color = Color.white;
+        originalColor = sprite.color;
         speed = MaxSpeed;
         catchLockTime = 0;
         hurtInvincibleTime = 0;
@@ -118,23 +119,23 @@ public class PlayerController : MonoBehaviour {
         //
         switch (ps) {
             case PlayerState.CatchReadyCaughtProjectile:
-                transform.localScale = scale;
+                //transform.localScale = scale;
                 sprite.color = Color.cyan;
                 break;
             case PlayerState.CatchingNoProjectile:
-                sprite.color = Color.white;
-                Vector3 scaleVect = new Vector3(0.1f, 0.1f, 0);
-                transform.localScale = scale + scaleVect;
+                sprite.color = originalColor;
+                //Vector3 scaleVect = new Vector3(0.1f, 0.1f, 0);
+                //transform.localScale = scale + scaleVect;
                 break;
             case PlayerState.HurtInvincible:
-                sprite.color = Color.white;
+                sprite.color = originalColor;
                 Color tempColor = sprite.color;
                 tempColor.a = 0.5f;
                 sprite.color = tempColor;
                 break;
             default:
-                transform.localScale = scale;
-                sprite.color = Color.white;
+                //transform.localScale = scale;
+                sprite.color = originalColor;
                 break;
         }
     }

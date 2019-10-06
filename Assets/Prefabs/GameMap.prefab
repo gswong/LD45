@@ -223,3 +223,4 @@ MonoBehaviour:
   PlayerObject: {fileID: 1885370463056902, guid: b91c9e26bf7e9004089ce35114ff722d,
     type: 3}
   Camera: {fileID: 8575650659021010717, guid: 02b55374a77900541b67a66249f010c7, type: 3}
+  Enemy: {fileID: 1755364460818522, guid: caa4d11ca24095e47bacd5c33c2ce8b0, type: 3}

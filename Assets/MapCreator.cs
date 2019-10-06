@@ -13,6 +13,8 @@ public class MapCreator : MonoBehaviour
     public float chanceToStartAlive = 0.32f;
     public GameObject PlayerObject;
     public GameObject Camera;
+    public GameObject Enemy;
+    public int EnemyCount = 10;
 
     private bool[,] initialiseMap(bool[,] map) {
         for (int x = 0; x < width; x++) {
@@ -87,6 +89,27 @@ public class MapCreator : MonoBehaviour
         return oldMap;
     }
 
+    private bool[,] createSpawnArea(bool[,] oldMap) {
+        for (int x = 1; x < 10; x++) {
+            for (int y = 1; y < 10; y++) {
+                oldMap[x, y] = false;
+            }
+        }
+        return oldMap;
+    }
+
+    private void spawnEnemies(bool[,] world, int count) {
+        int enemyCount = 0;
+        while (enemyCount < count) {
+            int x = Random.Range(0, width - 1);
+            int y = Random.Range(0, height - 1);
+            if (!world[x, y]) {
+                GameObject projectile = Instantiate(Enemy, new Vector3(x * .6f, y * .6f, 0), Quaternion.identity) as GameObject;
+                enemyCount++;
+            }
+        }
+    }
+
     private void spawnPlayer(bool[,] world) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -108,6 +131,7 @@ public class MapCreator : MonoBehaviour
             cellmap = doSimulationStep(cellmap);
         }
         cellmap = fillEdges(cellmap);
+        cellmap = createSpawnArea(cellmap);
         Tilemap tm = GetComponent<Tilemap>();
         for (var i = 0; i < width; i++) {
             for (var j = 0; j < height; j++) {
@@ -117,6 +141,7 @@ public class MapCreator : MonoBehaviour
                 }
             }
         }
+        spawnEnemies(cellmap, EnemyCount);
         spawnPlayer(cellmap);
     }
 
