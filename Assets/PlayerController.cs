@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
     private Vector3 aimProjectile;
     private Color originalColor;
     private GameObject shield;
+    private GameObject cracked;
 
     public enum PlayerState {
         CatchReadyNoProjectile,
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour {
     void Start () {
         rb = GetComponent<Rigidbody2D>();
         shield = GameObject.Find("Shield");
-        shield.SetActive(false);
+        cracked = GameObject.Find("Cracked");
         sprite = GetComponent<SpriteRenderer>();
         originalColor = sprite.color;
         speed = MaxSpeed;
@@ -120,6 +121,20 @@ public class PlayerController : MonoBehaviour {
         //
         // Visual changes
         //
+        switch (ps) {
+            case PlayerState.CatchReadyCaughtProjectile:
+                shield.SetActive(true);
+                break;
+            case PlayerState.NoLivesRemaining:
+                cracked.SetActive(true);
+                transform.Rotate(new Vector3(0, 0, 1), -400 * Time.deltaTime);
+                break;
+            default:
+                cracked.SetActive(false);
+                shield.SetActive(false);
+                transform.rotation = Quaternion.identity;
+                break;
+        }
         switch (ps) {
             case PlayerState.CatchReadyCaughtProjectile:
                 shield.SetActive(true);
