@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour {
         //
         // Spacebar actions
         //
-        if (Input.GetKeyDown("space") && Time.time > catchLockTime && Time.time > hurtInvincibleTime) {
+        if ((Input.GetKeyDown("space") || Input.GetMouseButtonDown(0)) && Time.time > catchLockTime && Time.time > hurtInvincibleTime) {
             switch (ps) {
                 case PlayerState.CatchReadyNoProjectile:
                     ps = PlayerState.CatchingNoProjectile;
@@ -87,7 +87,10 @@ public class PlayerController : MonoBehaviour {
                     GameObject projectile = Instantiate(PlayerProjectile, transform.position, Quaternion.identity) as GameObject;
                     Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
                     Rigidbody2D prb = projectile.GetComponent<Rigidbody2D>();
-                    prb.AddForce(aimProjectile * 2 * KnockBack);
+                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    mousePosition.z = 0;
+                    aimProjectile = (mousePosition - transform.position).normalized;
+                    prb.AddForce(aimProjectile * 2 * MaxSpeed);
                     catchLockTime = Time.time + 0.5f;
                     break;
                 default:
