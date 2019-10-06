@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour {
                 sprite.color = Color.cyan;
                 break;
             case PlayerState.CatchingNoProjectile:
-                sprite.color = originalColor;
+                sprite.color = Color.cyan;
                 //Vector3 scaleVect = new Vector3(0.1f, 0.1f, 0);
                 //transform.localScale = scale + scaleVect;
                 break;
