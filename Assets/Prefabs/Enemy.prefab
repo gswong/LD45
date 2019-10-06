@@ -145,6 +145,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 674c21ee8f129174f8602a300e6172c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletCount: 10
-  startAngle: 0
-  endAngle: 360
+  pooledBullet: {fileID: 1138065498312978, guid: b61eec225a3174e49bfb30478455aa0b,
+    type: 3}
+  maximumBulletCount: 1024
+  initialRotation: 0
+  bulletSetAmount: 1
+  bulletSetSpread: 0
+  bulletLineAmount: 4
+  bulletLineSpread: 90
+  bulletFireRatePerSecond: 4
+  bulletRotationRate: 90
