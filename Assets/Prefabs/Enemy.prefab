@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 212721198740729732}
   - component: {fileID: 50529694407513574}
   - component: {fileID: 8095613131634185733}
+  - component: {fileID: 5178535777693238711}
+  - component: {fileID: 1513276955168686742}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -119,3 +121,30 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.87499994
+--- !u!114 &5178535777693238711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755364460818522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9dd197fdfd30744d8ca6a3471f36555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1513276955168686742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755364460818522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674c21ee8f129174f8602a300e6172c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletCount: 10
+  startAngle: 0
+  endAngle: 360
