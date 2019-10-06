@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour {
             case PlayerState.CatchLockedNoProjectile:
                 if (collision.gameObject.CompareTag("EnemyProjectile")) {
                     ps = PlayerState.HurtInvincible;
-                    Destroy(collision.gameObject);
+                    collision.gameObject.SetActive(false);
                     hurtInvincibleTime = Time.time + 1;
                     if (Lives >= 0) {
                         Lives--;
@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour {
             case PlayerState.CatchingNoProjectile:
                 if (collision.gameObject.CompareTag("EnemyProjectile")) {
                     ps = PlayerState.CatchReadyCaughtProjectile;
-                    Destroy(collision.gameObject);
+                    collision.gameObject.SetActive(false);
                     catchLockTime = 0;
                 }
                 break;
