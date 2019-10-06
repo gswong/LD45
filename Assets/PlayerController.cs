@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour {
     private float hurtInvincibleTime;
     private Vector3 aimProjectile;
     private Color originalColor;
+    private GameObject shield;
 
     public enum PlayerState {
         CatchReadyNoProjectile,
@@ -42,6 +43,8 @@ public class PlayerController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody2D>();
+        shield = GameObject.Find("Shield");
+        shield.SetActive(false);
         sprite = GetComponent<SpriteRenderer>();
         originalColor = sprite.color;
         speed = MaxSpeed;
@@ -119,7 +122,7 @@ public class PlayerController : MonoBehaviour {
         //
         switch (ps) {
             case PlayerState.CatchReadyCaughtProjectile:
-                //transform.localScale = scale;
+                shield.SetActive(true);
                 sprite.color = Color.cyan;
                 break;
             case PlayerState.CatchingNoProjectile:
@@ -135,6 +138,7 @@ public class PlayerController : MonoBehaviour {
                 break;
             default:
                 //transform.localScale = scale;
+                shield.SetActive(false);
                 sprite.color = originalColor;
                 break;
         }
