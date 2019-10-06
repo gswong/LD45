@@ -80,20 +80,36 @@ public class PlayerController : MonoBehaviour {
                     break;
             }
         }
-        if (Time.time > catchLockTime) {
-            // No input and time expired
-            ps = PlayerState.CatchReadyNoProjectile;
-        }
 
-        if (Time.time > hurtInvincibleTime) {
-            ps = PlayerState.CatchReadyNoProjectile;
+        //
+        // No spacebar actions
+        //
+        switch (ps) {
+            case PlayerState.CatchingNoProjectile:
+            case PlayerState.CatchLockedNoProjectile:
+                if (Time.time > catchLockTime) {
+                    // No input and time expired
+                    ps = PlayerState.CatchReadyNoProjectile;
+                }
+                break;
+            case PlayerState.HurtInvincible:
+                if (Time.time > hurtInvincibleTime) {
+                    ps = PlayerState.CatchReadyNoProjectile;
+                }
+                break;
+            case PlayerState.CatchReadyNoProjectile:
+            case PlayerState.CatchReadyCaughtProjectile:
+            case PlayerState.NoLivesRemaining:
+            default:
+                break;
         }
 
         //
-        // Visual
+        // Visual changes
         //
         switch (ps) {
             case PlayerState.CatchReadyCaughtProjectile:
+                transform.localScale = scale;
                 sprite.color = Color.cyan;
                 break;
             case PlayerState.CatchingNoProjectile:
@@ -115,6 +131,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
+        // Only modify state, timers, and lives
         switch (ps) {
             case PlayerState.CatchReadyNoProjectile:
             case PlayerState.CatchLockedNoProjectile:
@@ -146,7 +163,8 @@ public class PlayerController : MonoBehaviour {
                 break;
             case PlayerState.CatchReadyCaughtProjectile:
                 if (collision.gameObject.CompareTag("EnemyProjectile")) {
-                    ps = PlayerState.CatchReadyCaughtProjectile;
+                    ps = PlayerState.CatchReadyNoProjectile;
+                    collision.gameObject.SetActive(false);
                 }
                 if (collision.gameObject.CompareTag("Enemy")) {
                     ps = PlayerState.CatchReadyNoProjectile;
