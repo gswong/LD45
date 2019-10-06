@@ -11,6 +11,8 @@ public class Tutorial : MonoBehaviour
     GameObject tutorial1;
     GameObject tutorial2;
     GameObject tutorial3;
+    float delayTutorial;
+
     void Start()
     {
         tutorial1 = GameObject.Find("Tutorial1");
@@ -26,13 +28,18 @@ public class Tutorial : MonoBehaviour
     {
         if (GameObject.Find("TutorialPlayer").GetComponent<TutorialPlayer>().ps == TutorialPlayer.PlayerState.CatchReadyCaughtProjectile) {
             tutorial2.SetActive(true);
+            GameObject.Find("TutorialPlayer").GetComponent<TutorialPlayer>().allowMovement = true;
         }
         if (GameObject.Find("TutorialEnemy") == null) {
-            tutorial3.SetActive(true);
+            if (Time.time > delayTutorial) {
+                tutorial3.SetActive(true);
+            }
+
+        } else {
+            delayTutorial = Time.time + 2f;
         }
-        
-        if(tutorial3.active) {
-            if (Input.anyKey) {
+        if (tutorial3.active) {
+            if (Input.GetMouseButtonDown(0)) {
                 SceneManager.LoadScene("GameplayScene");
             }
         }

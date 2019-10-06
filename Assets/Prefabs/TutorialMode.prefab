@@ -351,7 +351,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Mouse click to grab bullets when they hit you. Timing is important!
+  m_Text: 'Mouse click anywhere on screen to grab bullets when they hit you. Timing
+    is important!
 
 '
 --- !u!1 &6004925722927876893
@@ -388,8 +389,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000038147, y: -56.9}
-  m_SizeDelta: {x: 488.5, y: 69.8}
+  m_AnchoredPosition: {x: 0, y: -88}
+  m_SizeDelta: {x: 517.5, y: 121.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6004925722927876894
 CanvasRenderer:
@@ -433,9 +434,12 @@ MonoBehaviour:
   m_Text: 'Good! Now you can use the caught bullet for offense or defense.
 
 
+    Move around with WASD or arrow keys.
+
+
     Click again to release bullet in the direction of your mouse cursor.
 
-    Aim to hit back at the enemy!'
+    Aim mouse to hit back at the enemy!'
 --- !u!1 &6004925723274157167
 GameObject:
   m_ObjectHideFlags: 0
