@@ -21,7 +21,10 @@ public class PlayerProjectileController : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        // TODO decrement enemy life
+        if (collision.gameObject.CompareTag("Enemy")) {
+            Object.Destroy(this.gameObject);
+            // TODO decrement enemy life
+        }
 
         if (collision.gameObject.name == "Tilemap") {
             Object.Destroy(this.gameObject);

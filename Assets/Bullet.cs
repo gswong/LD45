@@ -48,4 +48,10 @@ public class Bullet : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+         if (collision.gameObject.name == "Tilemap") {
+            this.gameObject.SetActive(false);
+        }
+    }
 }

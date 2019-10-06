@@ -1,36 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-    //
-    // Externally control the speed
-    //
+public class TutorialPlayer : MonoBehaviour
+{
     public float MaxSpeed = 7;
-    public float KnockBack = 50;
-    public float Lives = 3;
-    public GameObject PlayerProjectile;
-    //
-    // Internally computed speed
-    //
-    private float speed;
-
     private float catchLockTime;
-    private Vector3 scale;
-
-    private Rigidbody2D rb;
-    private SpriteRenderer sprite;
-    private bool isCatching;
-    private bool caughtProjectile;
-    private bool isHurt;
     private float hurtInvincibleTime;
     private Vector3 aimProjectile;
-    private Color originalColor;
-    private GameObject shield;
-    private GameObject cracked;
-    private GameObject crosshairs;
-
     public enum PlayerState {
         CatchReadyNoProjectile,
         CatchingNoProjectile,
@@ -39,51 +16,32 @@ public class PlayerController : MonoBehaviour {
         HurtInvincible,
         NoLivesRemaining
     }
-
+    public GameObject PlayerProjectile;
     public PlayerState ps;
-
-    // Use this for initialization
-    void Start () {
-        rb = GetComponent<Rigidbody2D>();
+    private GameObject shield;
+    private GameObject cracked;
+    private GameObject crosshairs;
+    private SpriteRenderer sprite;
+    private Color originalColor;
+    // Start is called before the first frame update
+    void Start()
+    {
+        ps = PlayerState.CatchReadyNoProjectile;
+        //rb = GetComponent<Rigidbody2D>();
         shield = GameObject.Find("Shield");
         cracked = GameObject.Find("Cracked");
         crosshairs = GameObject.Find("Crosshairs");
         sprite = GetComponent<SpriteRenderer>();
         originalColor = sprite.color;
-        speed = MaxSpeed;
-        catchLockTime = 0;
-        hurtInvincibleTime = 0;
-        scale = transform.localScale;
-        ps = PlayerState.CatchReadyNoProjectile;
-        aimProjectile = new Vector3(1, 0, 0);
-        aimProjectile = aimProjectile.normalized;
-    }
-
-    public void ContinueGame() {
-        Lives = 3;
-        ps = PlayerState.CatchReadyNoProjectile;
     }
 
     // Update is called once per frame
-    void Update() {
-        //
-        // Movement
-        //
-        float xAxis = Input.GetAxis("Horizontal");
-        float yAxis = Input.GetAxis("Vertical");
-        Vector3 tempVect = new Vector3(xAxis, yAxis, 0);
-        tempVect = tempVect.normalized * speed * Time.deltaTime;
-        if (xAxis != 0 || yAxis != 0) {
-            aimProjectile = tempVect.normalized;
-        }
-        if (ps != PlayerState.HurtInvincible && ps != PlayerState.NoLivesRemaining) {
-            rb.MovePosition(rb.transform.position + tempVect);
-        }
-        crosshairs.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+    void Update()
+    {
         //
         // Spacebar actions
         //
+        crosshairs.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if ((Input.GetKeyDown("space") || Input.GetMouseButtonDown(0)) && Time.time > catchLockTime && Time.time > hurtInvincibleTime) {
             switch (ps) {
                 case PlayerState.CatchReadyNoProjectile:
@@ -128,7 +86,6 @@ public class PlayerController : MonoBehaviour {
             default:
                 break;
         }
-
         //
         // Visual changes
         //
@@ -138,12 +95,10 @@ public class PlayerController : MonoBehaviour {
                 crosshairs.SetActive(true);
                 break;
             case PlayerState.NoLivesRemaining:
-                GameObject.FindWithTag("MainCamera").GetComponentInChildren<Canvas>().enabled = true;
                 cracked.SetActive(true);
                 transform.Rotate(new Vector3(0, 0, 1), -400 * Time.deltaTime);
                 break;
             default:
-                GameObject.FindWithTag("MainCamera").GetComponentInChildren<Canvas>().enabled = false;
                 cracked.SetActive(false);
                 shield.SetActive(false);
                 crosshairs.SetActive(false);
@@ -183,22 +138,11 @@ public class PlayerController : MonoBehaviour {
                     ps = PlayerState.HurtInvincible;
                     collision.gameObject.SetActive(false);
                     hurtInvincibleTime = Time.time + 1;
-                    if (Lives >= 0) {
-                        Lives--;
-                    }
                     Vector3 direction = collision.gameObject.transform.position - transform.position;
-                    direction = -direction.normalized;
-                    rb.AddForce(direction * KnockBack);
                 }
                 if (collision.gameObject.CompareTag("Enemy")) {
                     ps = PlayerState.HurtInvincible;
                     hurtInvincibleTime = Time.time + 1;
-                    if (Lives >= 0) {
-                        Lives--;
-                    }
-                    Vector3 direction = collision.gameObject.transform.position - transform.position;
-                    direction = -direction.normalized;
-                    rb.AddForce(direction * KnockBack);
                 }
                 break;
             case PlayerState.CatchingNoProjectile:
@@ -222,11 +166,6 @@ public class PlayerController : MonoBehaviour {
                 break;
             default:
                 break;
-        }
-
-        if (Lives <= 0) {
-            // TODO Game Over
-            ps = PlayerState.NoLivesRemaining;
         }
     }
 }

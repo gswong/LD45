@@ -8,6 +8,7 @@ TagManager:
   - EnemyProjectile
   - PlayerProjectile
   - Wall
+  - GameOver
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - 
   - 
   - Background
-  - 
+  - Effects
   - 
   - 
   - 
@@ -47,4 +48,10 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Effects
+    uniqueID: 2596397147
+    locked: 0
+  - name: UI
+    uniqueID: 2607687623
     locked: 0
