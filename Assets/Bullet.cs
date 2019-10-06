@@ -6,7 +6,9 @@ public class Bullet : MonoBehaviour
 {
     private Vector2 moveDirection;
 
-    private float moveSpeed = 5f;
+    private float moveSpeed = 1f;
+
+    private float lifeDuration = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -17,16 +19,13 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
-
-        if(!GetComponent<Renderer>().isVisible)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     private void OnEnable()
     {
-        Invoke("Destroy", 3f);
+        CancelInvoke();
+        Invoke("DestroyInvisible", 1f);
+        Invoke("Destroy", lifeDuration);
     }
 
     private void OnDisable()
@@ -42,6 +41,19 @@ public class Bullet : MonoBehaviour
     public void SetMoveSpeed(float speed)
     {
         moveSpeed = speed;
+    }
+
+    public void SetLifeDuration(float duration)
+    {
+        lifeDuration = duration;
+    }
+
+    private void DestroyInvisible()
+    {
+        if(!GetComponent<Renderer>().isVisible)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void Destroy()

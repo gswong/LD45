@@ -1,30 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour {
+    private Transform player = null;
+
     public int Health = 1;
-    private float moveSpeed;
-    private bool moveRight;
+
+    public float moveSpeed = 5f;
+    
+    public float minDistaceFromPlayer = 5;
+
+    public float maxDistanceFromPlayer = 10;
+
+    //In what time will the enemy complete the journey between its position and the players position
+    public float smoothTime = 10.0f;
+
+    //Vector3 used to store the velocity of the enemy
+    private Vector3 smoothVelocity = Vector3.zero;
 
     // Start is called before the first frame update
     void Start() {
-        moveSpeed = 2f;
-        moveRight = true;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
     void Update() {
-        if (transform.position.x > 5f) {
-            moveRight = false;
-        } else if (transform.position.x < -5f) {
-            moveRight = true;
-        }
+        float distance = Vector3.Distance(transform.position, player.position);
 
-        if (moveRight) {
-            transform.position = new Vector2(transform.position.x + moveSpeed * Time.deltaTime, transform.position.y);
-        } else {
-            transform.position = new Vector2(transform.position.x - moveSpeed * Time.deltaTime, transform.position.y);
+        if (distance > minDistaceFromPlayer && distance < maxDistanceFromPlayer)
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, player.position, 
+                    ref smoothVelocity, smoothTime);
         }
     }
 

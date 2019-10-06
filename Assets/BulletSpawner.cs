@@ -46,6 +46,8 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField]
     private bool bulletRotationInverted = false;
 
+    public float lifeDuration = 3f;
+
     private List<GameObject> bullets = new List<GameObject>();
 
     private float bulletSpawnDeltaThreshold = 0f;
@@ -88,13 +90,15 @@ public class BulletSpawner : MonoBehaviour
                 float bulletDirectionY = transform.position.y + Mathf.Cos((currentAngle * Mathf.PI) / 180f);
 
                 Vector3 bulletMoveVector = new Vector3(bulletDirectionX, bulletDirectionY, 0f);
-                Vector2 bulletDirection = (bulletMoveVector - transform.position).normalized * bulletSpeed;
+                Vector2 bulletDirection = (bulletMoveVector - transform.position).normalized;
 
                 GameObject bullet = GetBullet();
                 bullet.transform.position = transform.position;
                 bullet.transform.rotation = transform.rotation;
-                bullet.SetActive(true);
+                bullet.GetComponent<Bullet>().SetLifeDuration(lifeDuration);
+                bullet.GetComponent<Bullet>().SetMoveSpeed(bulletSpeed);
                 bullet.GetComponent<Bullet>().SetMoveDirection(bulletDirection);
+                bullet.SetActive(true);
 
                 currentAngle = (currentAngle + bulletLineSpread) % 360;
             }
