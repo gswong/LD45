@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TutorialPlayer : MonoBehaviour
 {
+    public bool allowMovement;
     public float MaxSpeed = 7;
     private float catchLockTime;
     private float hurtInvincibleTime;
@@ -23,6 +24,7 @@ public class TutorialPlayer : MonoBehaviour
     private GameObject crosshairs;
     private SpriteRenderer sprite;
     private Color originalColor;
+    private Rigidbody2D rb;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,15 +35,32 @@ public class TutorialPlayer : MonoBehaviour
         crosshairs = GameObject.Find("Crosshairs");
         sprite = GetComponent<SpriteRenderer>();
         originalColor = sprite.color;
+        allowMovement = false;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //
+        // Movement
+        //
+        if (allowMovement) {
+            float xAxis = Input.GetAxis("Horizontal");
+            float yAxis = Input.GetAxis("Vertical");
+            Vector3 tempVect = new Vector3(xAxis, yAxis, 0);
+            tempVect = tempVect.normalized * MaxSpeed * Time.deltaTime;
+            if (xAxis != 0 || yAxis != 0) {
+                aimProjectile = tempVect.normalized;
+            }
+            if (ps != PlayerState.HurtInvincible && ps != PlayerState.NoLivesRemaining) {
+                rb.MovePosition(rb.transform.position + tempVect);
+            }
+            crosshairs.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
+        //
         // Spacebar actions
         //
-        crosshairs.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if ((Input.GetKeyDown("space") || Input.GetMouseButtonDown(0)) && Time.time > catchLockTime && Time.time > hurtInvincibleTime) {
             switch (ps) {
                 case PlayerState.CatchReadyNoProjectile:
