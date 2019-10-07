@@ -230,7 +230,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Destroy all enemies to win!
+  m_Text: Destroy all enemies!
 --- !u!1 &3356056679044239055
 GameObject:
   m_ObjectHideFlags: 0
